@@ -1,4 +1,4 @@
-# :pushpin: (리액트) 원티드 프리 온보딩 선발 과제
+# :pushpin: (리액트) 원티드 프리 온보딩 코스 선발 과제
 > 원티드 홈페이지 Navbar, Carousel 클론 코딩
 
 >https://wanted-preonboarding-kar.netlify.app/
