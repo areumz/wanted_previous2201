@@ -1,12 +1,12 @@
-# :pushpin: (리액트) 향수 쇼핑몰
->향수 쇼핑몰 컨셉의 사이트를 리액트로 구현했습니다
+# :pushpin: (리액트) 원티드 프리 온보딩 선발 과제
+> 원티드 홈페이지 Navbar, Carousel 클론 코딩
 
 >https://wanted-preonboarding-kar.netlify.app/
 
 </br>
 
 ## 1. 제작 기간 & 참여 인원
-- 2021년 12월 3일
+- 2022년 1월 7일 ~ 13일
 - 개인 프로젝트
 
 </br>
@@ -25,13 +25,17 @@
 <summary><b>핵심 기능 설명 펼치기</b></summary>
 <div markdown="1">
 
-### SPA
-- 쇼핑몰 컨셉으로 싱글 페이지 어플리케이션을 구현하였습니다   
-- 맨 처음 메인 페이지와 캐러셀, 상품들이 뜨고 상단 메뉴바를 클릭하면   
- 각 상품 소개 상세 페이지로 연결했습니다
-
-### useState, useEffect
-- useState와 useEffect를 사용하여 동적인 기능을 구현했습니다
+### 클론 코딩
+- 원티드 홈페이지의 상단 부분을 클론 코딩했습니다
+- 모바일 / 데스크탑 반응형으로 구현했습니다
+  
+### Global Nav Bar
+- 상단 메뉴 부분을 마크업했고, 기존 홈페이지의 svg 등 소스를 그대로 가져옴
+- 과제 조건 상 마크업만 구현함
+  
+### Carousel
+- 총 11장의 배너가 5초에 한번 이동하고, 클릭하거나 마우스로 스와이프 가능하도록 구현함
+- 모바일에서는 스와이프 기능이 잘 구현되지 않음
 
 </div>
 </details>
@@ -41,91 +45,111 @@
 ## 4. 디버깅
 ### 4-1. 핵심 디버깅
 
-```각 상품들을 map으로 반복시 사진이 저장된 변수가 반복이 안되는 문제```
+```리액트에서 setInterval 사용시 발생하는 이슈```
 
-* 이전에 map으로 반복시에 이미지 src가 주소로 연결이 되었을 때는 문제가 없었는데   
-이번에는 로컬에 저장된 사진을 변수에 담아 import하니 반복시 에러가 남
-* console.log 검사를 해보니, {변수} 일 때는 문제가 없는데 {변수}+props.i 나   
-백틱 등으로 결합해서 사용하려했을 때 결국 img src="perfume0" 이런식으로 문자처럼 인식이 됨
-* src 주소를 데이터 객체에 넣어도 보고, 다양하게 시도해봤으나 계속 오류가 해결이 안됨
-* 구글링 끝에 ```<img src={ require('../img/perfume' + props.i + '.jpg').default } alt=""/>``` 이렇게   
-require와 default를 사용하여 했을 때 이미지까지 map 반복이 잘됨
+* 이전 프로젝트에서도 setInterval을 사용하다가 문제가 생겨 setTimeout으로 바꾼적이 있음   
+그 부분을 간과하고 이번 과제에 그대로 사용했는데 중간쯤에서 렉이 걸리는 상황이 발생함
+* 리액트 프로그래밍 모델과 setInterval의 임피던스 불일치로 인해 생긴 문제
+* 참고) https://velog.io/@jakeseo_me/번역-리액트-훅스-컴포넌트에서-setInterval-사용-시의-문제점
+* useInterval Hook 을 사용하여 해결함
 
 </br>
 
 
 ### 4-2. 각종 디버깅
 <details>
-<summary>라우터 Link 사용시 문제</summary>
+<summary>create-react-app 사용시 문제</summary>
 <div markdown="1">
 
 ```
-<span Link to ="/">Home </span>
+You are running `create-react-app` 4.0.3, which is behind the latest release 
+
+(5.0.0).
+
+We no longer support global installation of Create React App.
 ```
 
-* 실수로 span 태그 안에 Link 를 넣어서 작동 안됨
-* ```<Link to ="/"> <span>Home </span> </Link>``` 로 해결
+* 버전으로 인한 문제 생김. 재설치한뒤 npx 빼고 사용하니 되었음
 
 </details>
 
 </br>
 
 <details>
-<summary>라우터 사용 관련</summary>
+<summary>svg 아이콘 입력시 네임스페이스 속성이 지원되지 않는 상황</summary>
 <div markdown="1">
 
-* BrowserRouter 없이 바로 Switch, Route 등을 쓰니 사용할 수 없다는 에러
-* BrowserRouter 추가 후 에러 해결
+* xmlns:xlink -> xmlnsXlink 처럼 JSX와 호환되도록 구문 변환 적용하니 해결
 
 </details>
   
 </br>
 
 <details>
-<summary>setInterval</summary>
+<summary>span 관련 css 문제</summary>
 <div markdown="1">
 
-* setInterval을 useEffect 내에 넣어 'Best! 품절 임박' 문구를 주기적으로 깜빡이게 구현하려고함
-* 에러가 계속 발생했고, useEffect 밖으로 빼서 사용하는 것도 고민해봤으나   
-  구글링 했을 때 React의 기능적인 측면에서 setInterval이 부적합하다는 글이 있었음. 더 공부해봐야 할듯함
-* 아쉬운대로 setTimeout으로 설정하고, 작동 초 수가 길기 때문에 안전 장치로 clearTimeout도 추가함
+* span으로 묶여있는 New(N) 버튼 w와 h가 안 먹어서 고민   
+* span은 inline 이라서 안 먹혔던 것. inline-block으로 바꾸니 해결   
 
 </details>
   
 </br>
 
 <details>
-<summary>원격 저장소 연결</summary>
+<summary>조금 어이 없는 실수</summary>
 <div markdown="1">
 
-* 빌드 파일 만든 후 github 배포하려했으나, 에러 메세지가 뜸
-* package.json 파일에 homepage url은 연결했지만 git 원격 저장소 연결을 안함
-* ```git remote add origin ~~~```으로 연결 후 재시도 했을 때 제대로 배포됨
+* 캐러셀 슬라이드가 하나씩 나와야하는데 한꺼번에 나온 뒤 5초 후   
+동시에 사라지는 현상이 발생.. css 계속 고쳐봤으나 해결이 안되어서   
+첫줄부터 반복해서 확인함   
+
+* 알고보니 carousel-conten'n't 로 클래스 네임 주고.. css엔 content로..   
+스펠링 실수로 css가 전혀 안 먹혀서 발생한 문제.. 고치니 바로 작동함   
   
 </details>
 
 </br>
 
 <details>
-<summary>메인 페이지가 안 뜨는 문제</summary>
+<summary>useInterval 작동하며 슬라이드가 밀리는 문제</summary>
 <div markdown="1">
 
-* 배포된 페이지를 봤을 때 HOME 을 누르면 메인 페이지가 뜨지만 접속 당시에는   
-  상단 메뉴바 외에 아무 것도 뜨지 않음
-* github page 배포는 원칙적으로 SPA를 지원하지 않아서 이와 같이 Router를 사용해서 배포했을 때   
-  이런 문제가 자주 발생한다고함
-* HashRouter로 바꿔주니 해결됨
+* slide에 margin을 줬을 때, 슬라이드가 넘어가면서 점점 한쪽으로 치우치는 문제   
+슬라이드가 교체되면서 margin이 점점 늘어나서 생긴 문제인듯 보임   
+slide가 아닌 carousel-content에 margin을 줘서 해결
 
 </details>
+  
+</br>
+
+<details>
+<summary>netlify 배포 관련</summary>
+<div markdown="1">
+
+* gh-pages로 먼저 배포해보고, 이후 netlify로 배포하고자 했을 때 build.command   
+부분 에러가 계속 발생   
+
+```
+npm install netlify-cli -g   
+netlify deploy
+```
+로 해결
+  
+* 이 후 배포는 되었다고 떴지만 화면에 아무 것도 안 뜨는 문제
+homepage 링크가 github으로 되어있어서 netlify url로 다시 설정 후 배포
+
+</details>
+
 
 ## 5. 회고 / 느낀점
-> 첫 프로젝트와 비교했을 때 조금 더 리액트 사용이 손에 익은 것 같았다   
-  여전히 더 배워야하지만, 전보다 props 통해서 속성을 전달하거나 Router 사용 그리고   
-  Hook 사용에 대해 이해하고 사용한 느낌이 들었다   
-  아쉬운 점은, 급하게 만들다보니 CSS를 세밀하게 모듈화하지않고 그냥 진행해서   
-  중간중간 스타일이 중복으로 적용되는 바람에 지저분한 className이 많이 들어간 것 같다   
-  그리고 서버가 없다보니 json 파일이 아니라 임시 파일로 연결해서 단조롭게 된 것이 아쉽다   
-  다음에는 SASS와 Redux를 좀 더 배워서 완성도 있게 만들어 보고싶다
+> 원티드 선발 과제를 위한 클론 코딩이었는데, 리액트로 프로젝트를 만들어본적은 있지만   
+  반응형으로 만들어본건 처음이라 (리액트) 아쉬움이 많았다.   
+  JS에 비해 아직 리액트는 덜 익숙하다보니 모바일 퍼스트로 구현하지않고 데스크탑 기준으로   
+  먼저 만든 후에 모바일 버전을 다시 추가하려하니 번거로움이 있었다.   
+  그리고 기존에는 gh-pages로만 거의 배포를 하다가 netlify로 하다보니 조금은 시간이 걸렸다.
+  그래도 계속 사용하다보니 리액트 Hooks나 배포 등에 조금씩 익숙해지는 느낌인데   
+  더 공부하며 연습해야겠다!
 
 
 
