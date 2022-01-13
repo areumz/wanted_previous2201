@@ -136,7 +136,7 @@ netlify deploy
 ```
 로 해결
   
-* 이 후 배포는 되었다고 떴지만 화면에 아무 것도 안 뜨는 문제
+* 이 후 배포는 되었다고 떴지만 화면에 아무 것도 안 뜨는 문제   
 homepage 링크가 github으로 되어있어서 netlify url로 다시 설정 후 배포
 
 </details>
